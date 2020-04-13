@@ -1,3 +1,3 @@
 domain_name: ${deployment_endpoint}
 email: ${email} 
-vaultport: ${vault["vault_service_port"]}
+vaultport: 8200
