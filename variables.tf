@@ -79,3 +79,12 @@ variable "google_domain_name" {
 variable "deployment_name" {
   default = "common_tools"
 }
+
+variable "nexus" {
+  type = "map"
+  default = {
+    admin_password     = "fuchicorp"
+    docker_repo_port   = 8085
+    nexus_docker_image = "quay.io/travelaudience/docker-nexus-proxy"
+  }
+}
