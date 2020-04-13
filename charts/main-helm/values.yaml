@@ -1,2 +1,2 @@
-domain_name: ${deployment_endpoint}
-email: ${email} 
+# domain_name: ${deployment_endpoint}
+# email: ${email} 
