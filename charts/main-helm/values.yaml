@@ -1,2 +1,3 @@
 domain_name: ${deployment_endpoint}
 email: ${email} 
+vaultport: ${var.vault["vault_service_port"]}
