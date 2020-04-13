@@ -3,7 +3,7 @@ module "vault_deploy" {
   source                 = "fuchicorp/chart/helm"
   deployment_name        = "${var.vault["vault-name"]}"
   deployment_environment = "${kubernetes_namespace.service_tools.metadata.0.name}"
-  deployment_endpoint    = "test-vault.${var.google_domain_name}"
+  deployment_endpoint    = "vault.${var.google_domain_name}"
   deployment_path        = "vault"
 
   template_custom_vars = {
