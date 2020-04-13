@@ -11,5 +11,6 @@ module "ingress_deploy" {
     null_depends_on   = "${helm_release.cert_manager.id}"
     email             = "${var.email}"
     domain_name       = "${var.google_domain_name}"
+    vault_service_port   = "${var.vault["vault_service_port"]}"
   }
 }
