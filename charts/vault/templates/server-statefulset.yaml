@@ -84,6 +84,7 @@ spec:
               name: internal
             - containerPort: 8202
               name: replication
+          {{- if $.Values.server.readinessProbe.enabled }}
           readinessProbe:
             {{- if .Values.server.readinessProbe.path }}
             httpGet:
@@ -105,20 +106,20 @@ spec:
             successThreshold: 1
             timeoutSeconds: 5
           {{- end }}
-          # {{- if .Values.server.livenessProbe.enabled }}
-        #   livenessProbe:
-        #     httpGet:
-        #       path: {{ .Values.server.livenessProbe.path | quote }}
-        #       port: 8200
-        #       scheme: {{ include "vault.scheme" . | upper }}
-        #     initialDelaySeconds: {{ .Values.server.livenessProbe.initialDelaySeconds }}
-        #     periodSeconds: 3
-        #     successThreshold: 1
-        #     timeoutSeconds: 5
-        #   {{- end }}
-        # {{- if .Values.server.extraContainers }}
-        #   {{ toYaml .Values.server.extraContainers | nindent 8}}
-        # {{- end }}
+          {{- if .Values.server.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.server.livenessProbe.path | quote }}
+              port: 8200
+              scheme: {{ include "vault.scheme" . | upper }}
+            initialDelaySeconds: {{ .Values.server.livenessProbe.initialDelaySeconds }}
+            periodSeconds: 3
+            successThreshold: 1
+            timeoutSeconds: 5
+          {{- end }}
+        {{- if .Values.server.extraContainers }}
+          {{ toYaml .Values.server.extraContainers | nindent 8}}
+        {{- end }}
           lifecycle:
             # Vault container doesn't receive SIGTERM from Kubernetes
             # and after the grace period ends, Kube sends SIGKILL.  This 
@@ -131,5 +132,5 @@ spec:
       imagePullSecrets:
         {{- toYaml .Values.global.imagePullSecrets | nindent 8 }}
       {{- end }}
-#   {{ template "vault.volumeclaims" . }}
-# {{ end }}
+  {{ template "vault.volumeclaims" . }}
+{{ end }}
