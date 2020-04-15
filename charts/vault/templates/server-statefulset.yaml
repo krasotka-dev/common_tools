@@ -84,7 +84,7 @@ spec:
               name: internal
             - containerPort: 8202
               name: replication
-          {{- if .Values.server.readinessProbe.enabled }}
+          {{- if $.Values.server.readinessProbe.enabled }}
           readinessProbe:
             {{- if .Values.server.readinessProbe.path }}
             httpGet:
