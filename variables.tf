@@ -18,6 +18,7 @@ variable "nexus" {
     admin_password     = "fuchicorp"
     docker_repo_port   = 8085
     nexus_docker_image = "quay.io/travelaudience/docker-nexus-proxy"
+    nexus_secret    = "secret"
   }
 }
 
