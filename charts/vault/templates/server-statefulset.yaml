@@ -7,7 +7,6 @@ metadata:
   name: {{ template "vault.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    helm.sh/chart: {{ include "vault.chart" . }}
     app.kubernetes.io/name: {{ include "vault.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
@@ -19,7 +18,6 @@ spec:
     type: OnDelete
   selector:
     matchLabels:
-      helm.sh/chart: {{ template "vault.chart" . }}
       app.kubernetes.io/name: {{ template "vault.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
       component: server
@@ -53,8 +51,8 @@ spec:
           securityContext:
             capabilities:
               add: ["IPC_LOCK"]
-          image: "{{ .Values.global.image }}"
-          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          image: {{ .Values.server.image.repository }}:{{ .Values.server.image.tag | default "latest" }}
+          imagePullPolicy: {{ .Values.server.image.pullPolicy }}
           command: {{ template "vault.command" . }}
           args: {{ template "vault.args" . }}
           env:
@@ -86,6 +84,7 @@ spec:
               name: internal
             - containerPort: 8202
               name: replication
+          {{- if .Values.server.readinessProbe.enabled }}
           readinessProbe:
             {{- if .Values.server.readinessProbe.path }}
             httpGet:
@@ -118,6 +117,9 @@ spec:
             successThreshold: 1
             timeoutSeconds: 5
           {{- end }}
+        {{- if .Values.server.extraContainers }}
+          {{ toYaml .Values.server.extraContainers | nindent 8}}
+        {{- end }}
           lifecycle:
             # Vault container doesn't receive SIGTERM from Kubernetes
             # and after the grace period ends, Kube sends SIGKILL.  This 
@@ -131,5 +133,4 @@ spec:
         {{- toYaml .Values.global.imagePullSecrets | nindent 8 }}
       {{- end }}
   {{ template "vault.volumeclaims" . }}
-{{ end }}
 {{ end }}
